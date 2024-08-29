@@ -42,6 +42,9 @@ public class User {
     @Column(name = "is_active",nullable = false)
     private boolean isActive;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
     @Column(name = "transactions")
     @OneToMany(mappedBy = "user")
     private Set<Transaction> transactions = new HashSet<>();
@@ -56,5 +59,9 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
+    public void softDelete() {
+        this.isDeleted = true;
+        this.isActive = false;
+    }
 
 }

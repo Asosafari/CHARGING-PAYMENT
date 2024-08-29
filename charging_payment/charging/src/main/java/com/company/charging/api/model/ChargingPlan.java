@@ -39,6 +39,10 @@ public abstract class ChargingPlan {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
+
     @Builder.Default
     @ManyToMany(mappedBy = "chargingPlans")
     private Set<User> users = new HashSet<>();
@@ -52,5 +56,10 @@ public abstract class ChargingPlan {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
 
 }

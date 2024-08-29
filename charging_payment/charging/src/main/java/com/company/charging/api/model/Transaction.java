@@ -38,6 +38,9 @@ public class Transaction {
     @Column(name = "is_success")
     private boolean isSuccess;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type",nullable = false)
     private TransactionType transactionType;
@@ -45,5 +48,9 @@ public class Transaction {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
 
 }
