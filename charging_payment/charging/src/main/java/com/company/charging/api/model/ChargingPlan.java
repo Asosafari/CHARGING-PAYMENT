@@ -35,6 +35,9 @@ public abstract class ChargingPlan {
     @Column(name = "rate_per_unit",nullable = false)
     private BigDecimal ratePerUnit;
 
+    @Column(name = "price_per_unit",nullable = false)
+    private BigDecimal pricePerUnit;
+
 
     @Column(name = "description")
     private String description;

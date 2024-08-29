@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.validation.constraints.Email;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -55,9 +56,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "charging_plan_id"))
     private Set<ChargingPlan> chargingPlans = new HashSet<>();
 
+    @Version
+    private Integer version;
+
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    @Column()
+    private LocalDateTime updateDate;
 
     public void softDelete() {
         this.isDeleted = true;
