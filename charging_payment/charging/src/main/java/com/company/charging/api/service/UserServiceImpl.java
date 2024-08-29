@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -28,12 +27,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDTO> listOfUsers(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = BuildPageRequest.build(pageNumber,pageSize,"username");
-        return userRepository.findAll(pageRequest).map(userMapper ::mapUser);
+        return userRepository.findAll(pageRequest).map(userMapper ::mapToDTO);
     }
 
     @Override
     public Optional<UserDTO> getUserById(Long id) {
-        return Optional.ofNullable(userMapper.mapUser(userRepository.findById(id).orElse(null)));
+        return Optional.ofNullable(userMapper.mapToDTO(userRepository.findById(id).orElse(null)));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
             founduser.setEmail(userDto.getEmail());
             founduser.setPassword(userDto.getPassword());
             founduser.setUpdateDate(LocalDateTime.now());
-            atomicReference.set(Optional.of(userMapper.mapUser(userRepository.save(founduser))));
+            atomicReference.set(Optional.of(userMapper.mapToDTO(userRepository.save(founduser))));
         }, () -> atomicReference.set(Optional.empty())
         );
         return atomicReference.get();
