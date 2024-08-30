@@ -8,17 +8,13 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
 
-    Page<Transaction> findAllTransaction(String username,
-                                         String chargingPlanName,
-                                         boolean isSuccess,
-                                         Integer pageNumber,
-                                         Integer pagSize);
-
+    Page<Transaction> findByUserUsernameAndChargingPlanPlanName(String username,
+                                                                String chargingPlanName,
+                                                                PageRequest pageRequest);
 
     @Procedure(procedureName = "get_authorized_bank_users")
     String findPrivateKeyCheckout(Long id);

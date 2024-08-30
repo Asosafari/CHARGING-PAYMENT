@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Repository
 public interface ChargingPlanRepository extends JpaRepository<ChargingPlan,Long> {
 
-    Page<ChargingPlan> FindAllChargingPlan(BigDecimal ratePerUnit, BigDecimal pricePerUnit,Integer pageNumber, Integer pageSize);
+    Page<ChargingPlan> findByRatePerUnitGreaterThanAndPricePerUnitLessThan(BigDecimal ratePerUnit, BigDecimal pricePerUnit, PageRequest pageRequest);
     Page<ChargingPlan> findByRatePerUnitGreaterThan(BigDecimal greaterThanRate, PageRequest pageRequest);
 
     Page<ChargingPlan> findByPricePerUnitLessThan(BigDecimal lessThanPricePerUnit, PageRequest pageRequest);
