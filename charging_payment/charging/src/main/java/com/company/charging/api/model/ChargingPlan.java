@@ -1,8 +1,7 @@
 package com.company.charging.api.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,9 +18,11 @@ import java.util.Set;
  */
 
 @Entity
-@Data
-@SuperBuilder
 @Table(name = "charging_plan")
+@Getter
+@Setter
+@AllArgsConstructor
+@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ChargingPlan {
 
@@ -45,8 +46,6 @@ public abstract class ChargingPlan {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
-
-    @Builder.Default
     @ManyToMany(mappedBy = "chargingPlans")
     private Set<User> users = new HashSet<>();
 
@@ -64,5 +63,7 @@ public abstract class ChargingPlan {
     public void softDelete() {
         this.isDeleted = true;
     }
+
+
 
 }
