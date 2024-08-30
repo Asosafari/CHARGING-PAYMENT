@@ -40,10 +40,19 @@ public class TransactionServiceImpl implements TransactionService {
         Page<Transaction> transactions;
 
         if (StringUtils.hasText(username ) && !StringUtils.hasText(chargingPlanName ) ) {
+
            transactions = getAllTransactionByUsername(username,pageRequest);
+
         } else if(!StringUtils.hasText(username) && StringUtils.hasText(chargingPlanName)){
+
             transactions = getAllTransactionByChargingPlanName(chargingPlanName,pageRequest);
-        }else {
+
+        }else if (StringUtils.hasText(username) && StringUtils.hasText(chargingPlanName)){
+
+            transactions = transactionRepository.findByUserUsernameAndChargingPlanPlanName(username,chargingPlanName,pageRequest);
+        }
+
+        else {
             transactions = transactionRepository.findAll(pageRequest);
         }
 
