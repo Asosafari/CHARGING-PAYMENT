@@ -49,6 +49,9 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
+    @Transient
+    private String description;
+
     public void softDelete() {
         this.isDeleted = true;
     }
