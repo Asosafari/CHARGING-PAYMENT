@@ -1,8 +1,7 @@
 package com.company.charging.api.model;
 
 public enum TransactionType {
-    CHARGE("CHARGE"),REFUND("REFUND");
-
+    DIRECT("DIRECT"),GATEWAY("GATEWAY");
     TransactionType(String name) {
     }
 }
