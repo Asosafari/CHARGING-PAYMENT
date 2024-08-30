@@ -12,5 +12,5 @@ public interface TransactionService {
                                           Integer pageNumber,
                                           Integer pageSize);
 
-    public boolean deleteUser(Long id);
+    public boolean deleteTrasction(Long id);
 }

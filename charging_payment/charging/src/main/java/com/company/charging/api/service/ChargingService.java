@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface ChargingService {
-    Page<ChargingPlanDTO> listOfUsers(BigDecimal greaterThanRate,BigDecimal lessThanPricePerUnit,
+    Page<ChargingPlanDTO>listOfChargingPlan(BigDecimal greaterThanRate,BigDecimal lessThanPricePerUnit,
                                       Integer pageNumber, Integer pageSize,String sortProperty);
-    Optional<ChargingPlanDTO> getUserById(Long id);
-    Optional<ChargingPlanDTO> updateUser(Long id, ChargingPlanDTO chargingPlanDTO);
-    boolean deleteUser(Long id);
+    Optional<ChargingPlanDTO> getplanById(Long id);
+    Optional<ChargingPlanDTO> updatePlan(Long id, ChargingPlanDTO chargingPlanDTO);
+    boolean deletePlan(Long id);
 
 }

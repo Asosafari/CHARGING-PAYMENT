@@ -29,7 +29,7 @@ public class ChargingServiceImpl implements ChargingService {
 
 
     @Override
-    public Page<ChargingPlanDTO> listOfUsers(BigDecimal greaterThanRate,
+    public Page<ChargingPlanDTO> listOfChargingPlan(BigDecimal greaterThanRate,
                                              BigDecimal lessThanPricePerUnit,
                                              Integer pageNumber, Integer pageSize,
                                              String sortProperty) {
@@ -41,8 +41,10 @@ public class ChargingServiceImpl implements ChargingService {
             plans = getAllPlansByUpperLimitRate(greaterThanRate,pageRequest);
         } else if (greaterThanRate == null && lessThanPricePerUnit != null) {
             plans = getAllPlansByLowerLimitPrice(lessThanPricePerUnit, pageRequest);
-        } else {
+        } else if (greaterThanRate == null){
             plans = chargingPlanRepository.findAll(pageRequest);
+        }else {
+            plans = chargingPlanRepository.findByRatePerUnitGreaterThanAndPricePerUnitLessThan(greaterThanRate,lessThanPricePerUnit,pageRequest);
         }
         return plans.map(chargingPlanMapper ::mapToDTO);
 
@@ -57,12 +59,12 @@ public class ChargingServiceImpl implements ChargingService {
     }
 
     @Override
-    public Optional<ChargingPlanDTO> getUserById(Long id) {
+    public Optional<ChargingPlanDTO> getplanById(Long id) {
         return Optional.ofNullable(chargingPlanMapper.mapToDTO(chargingPlanRepository.findById(id).orElse(null)));
     }
 
     @Override
-    public Optional<ChargingPlanDTO> updateUser(Long id, ChargingPlanDTO chargingPlanDTO) {
+    public Optional<ChargingPlanDTO> updatePlan(Long id, ChargingPlanDTO chargingPlanDTO) {
         AtomicReference<Optional<ChargingPlanDTO>> atomicReference = new AtomicReference<>();
         chargingPlanRepository.findById(id).ifPresentOrElse(foundPlan ->{
             foundPlan.setPlanName(chargingPlanDTO.getPlanName());
@@ -78,7 +80,7 @@ public class ChargingServiceImpl implements ChargingService {
     }
 
     @Override
-    public boolean deleteUser(Long id) {
+    public boolean deletePlan(Long id) {
         Optional<ChargingPlan> plan = chargingPlanRepository.findById(id);
         if (plan.isPresent()){
             plan.get().softDelete();

@@ -59,6 +59,8 @@ public class TransactionServiceImpl implements TransactionService {
         return transactions.map(transactionMapper ::mapToDto);
     }
 
+
+
     private Page<Transaction> getAllTransactionByChargingPlanName(String chargingPlanName, PageRequest pageRequest) {
         return transactionRepository.findByChargingPlanPlanName(chargingPlanName,pageRequest);
     }
@@ -128,10 +130,8 @@ public class TransactionServiceImpl implements TransactionService {
         return "Successes";
     }
 
-
-
     @Override
-    public boolean deleteUser(Long id) {
+    public boolean deleteTrasction(Long id) {
         Optional<Transaction> transaction = transactionRepository.findById(id);
         if (transaction.isPresent()){
             transaction.get().softDelete();
@@ -140,6 +140,8 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return false;
     }
+
+
 }
 
 

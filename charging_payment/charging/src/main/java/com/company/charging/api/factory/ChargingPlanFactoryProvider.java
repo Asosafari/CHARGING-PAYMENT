@@ -40,4 +40,5 @@ public class ChargingPlanFactoryProvider implements ChargingPlanFactory {
                     .build();
         };
     }
+
 }
