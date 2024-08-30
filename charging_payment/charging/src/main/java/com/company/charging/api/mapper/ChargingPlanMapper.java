@@ -12,5 +12,4 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface ChargingPlanMapper {
     ChargingPlanDTO mapToDTO (ChargingPlan chargingPlan);
-    ChargingPlan mapToModel(ChargingPlanDTO chargingPlanDTO);
 }

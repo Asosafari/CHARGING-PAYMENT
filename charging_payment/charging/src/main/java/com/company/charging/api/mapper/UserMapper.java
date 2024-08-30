@@ -9,9 +9,8 @@ import org.mapstruct.Mapper;
  * Date:8/29/24
  * Time:11:04 PM
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
-    User mapToModel(UserDTO userDTO);
     UserDTO mapToDTO(User user);
 }
 
