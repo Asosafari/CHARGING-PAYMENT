@@ -4,6 +4,7 @@ import com.company.charging.api.dto.ChargingPlanDTO;
 
 import com.company.charging.api.service.ChargingService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,12 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @WebMvcTest(ChargingPlanController.class)
@@ -72,4 +76,14 @@ class ChargingPlanControllerTest {
 
     }
 
+    @Test
+    void createChargingPlan() throws Exception {
+        given(planService.CreateChargingPlan(any())).willReturn(chargingPlanDTO);
+        mockMvc.perform(post("/api/v1/plans/create")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(chargingPlanDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.planName").value("premiumA"));
+    }
 }

@@ -5,10 +5,11 @@ import com.company.charging.api.exception.NotFoundException;
 import com.company.charging.api.service.ChargingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -36,7 +37,17 @@ public class ChargingPlanController {
 
     @GetMapping("/api/v1/plans/{planId}")
     public ChargingPlanDTO getPlansById(@PathVariable("planId") Long planId){
-        return chargingService.getplanById(planId).orElseThrow(NotFoundException::new);
+        return chargingService.getPlanById(planId).orElseThrow(NotFoundException::new);
     }
+
+    @PostMapping("/api/v1/plans/create")
+
+    public ResponseEntity<ChargingPlanDTO> createCharging(@Validated @RequestBody ChargingPlanDTO chargingPlanDTO){
+        ChargingPlanDTO savePlan = chargingService.CreateChargingPlan(chargingPlanDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location","/api/v1/plans/" + savePlan.getId());
+        return new ResponseEntity<>(savePlan,headers, HttpStatus.CREATED);
+    }
+
 
 }
