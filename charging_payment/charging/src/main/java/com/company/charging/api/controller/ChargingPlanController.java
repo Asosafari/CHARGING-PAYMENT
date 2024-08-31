@@ -57,4 +57,12 @@ public class ChargingPlanController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping("/api/v1/plans/{chargingPlanId}")
+    public ResponseEntity deleteChargingPlan(@PathVariable("chargingPlanId") Long chargingPlanId){
+        if (!chargingService.deletePlan(chargingPlanId)){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 }
