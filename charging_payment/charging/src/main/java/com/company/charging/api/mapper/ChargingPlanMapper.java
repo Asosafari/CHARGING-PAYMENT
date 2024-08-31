@@ -1,6 +1,8 @@
 package com.company.charging.api.mapper;
 
 import com.company.charging.api.dto.ChargingPlanDTO;
+import com.company.charging.api.factory.ChargingPlanFactory;
+import com.company.charging.api.factory.ChargingPlanFactoryProvider;
 import com.company.charging.api.model.ChargingPlan;
 import org.mapstruct.Mapper;
 
@@ -12,4 +14,13 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface ChargingPlanMapper {
     ChargingPlanDTO mapToDTO (ChargingPlan chargingPlan);
+
+    default ChargingPlan maptomodel  (ChargingPlanDTO chargingPlanDTO){
+        ChargingPlanFactory factory = ChargingPlanFactoryProvider.createChargingPlan(chargingPlanDTO.getChargingPlanType());
+        return factory.createChargingPlan(chargingPlanDTO.getChargingPlanType(),
+                chargingPlanDTO.getPlanName(),
+                chargingPlanDTO.getRatePerUnit(),
+                chargingPlanDTO.getPricePerUnit(),
+                chargingPlanDTO.getDescription());
+    }
 }
