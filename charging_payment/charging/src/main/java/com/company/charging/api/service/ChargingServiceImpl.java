@@ -59,8 +59,16 @@ public class ChargingServiceImpl implements ChargingService {
     }
 
     @Override
-    public Optional<ChargingPlanDTO> getplanById(Long id) {
+    public Optional<ChargingPlanDTO> getPlanById(Long id) {
         return Optional.ofNullable(chargingPlanMapper.mapToDTO(chargingPlanRepository.findById(id).orElse(null)));
+    }
+
+    @Override
+    public ChargingPlanDTO CreateChargingPlan(ChargingPlanDTO chargingPlanDTO) {
+        return chargingPlanMapper
+                .mapToDTO(chargingPlanRepository.
+                        save(chargingPlanMapper
+                                .maptomodel(chargingPlanDTO)));
     }
 
     @Override
