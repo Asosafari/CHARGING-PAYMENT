@@ -101,4 +101,15 @@ class UserControllerTest {
         assertThat(userDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
         assertThat(userDTO.getEmail()).isEqualTo(userDTOArgumentCaptor.getValue().getEmail());
     }
+
+    @Test
+    void deleteUser() throws Exception {
+        given(userService.deleteUser(any())).willReturn(true);
+        mockMvc.perform(delete("/api/v1/users/{userId}",userDTO.getId())
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        verify(userService).deleteUser(idArgumentCaptor.capture());
+        assertThat(userDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
+
+    }
 }

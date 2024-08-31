@@ -57,4 +57,15 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping("/api/v1/users/{userId}")
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId){
+
+        if (!userService.deleteUser(userId)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
 }
