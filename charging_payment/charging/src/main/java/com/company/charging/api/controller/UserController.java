@@ -37,4 +37,12 @@ public class UserController {
         return userService.getUserById(userId).orElseThrow(NotFoundException::new);
     }
 
+    @PostMapping("/api/v1/users/create")
+    public ResponseEntity<UserDTO> createUser(@Validated @RequestBody UserDTO userDTO){
+        UserDTO saveUserDto = userService.saveUser(userDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/user/" + saveUserDto.getId().toString());
+        return new ResponseEntity<>(saveUserDto, headers, HttpStatus.CREATED);
+    }
+
 }
