@@ -1,6 +1,7 @@
 package com.company.charging.api.factory;
 
 import com.company.charging.api.model.ChargingPlan;
+import com.company.charging.api.model.ChargingPlanType;
 
 import java.math.BigDecimal;
 
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  */
 public interface ChargingPlanFactory {
 
-    ChargingPlan createChargingPlan(String type,
+    ChargingPlan createChargingPlan(ChargingPlanType chargingPlanType,
                                     String planName,
                                     BigDecimal ratePerUnit,
                                     BigDecimal pricePerUnit,
