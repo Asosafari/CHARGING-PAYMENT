@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 /**
  * Author: ASOU SAFARI
  * Date:8/30/24
@@ -45,4 +47,14 @@ public class UserController {
         return new ResponseEntity<>(saveUserDto, headers, HttpStatus.CREATED);
     }
 
+
+    @PutMapping("/api/v1/users/{userId}")
+    public ResponseEntity updateUser(@PathVariable("userId") Long userId,
+                                                @Validated @RequestBody UserDTO userDTO){
+
+        if (userService.updateUser(userId,userDTO).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,11 +20,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
@@ -37,6 +42,12 @@ class UserControllerTest {
 
     @MockBean
     UserService userService;
+
+    @Captor
+    ArgumentCaptor<Long> idArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<UserDTO> userDTOArgumentCaptor;
 
     @BeforeEach
     void setUp() {
@@ -72,5 +83,22 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("Gorg_Ali"));
+    }
+
+    @Test
+    void updateUser() throws Exception {
+        given(userService.updateUser(any(),any())).willReturn(Optional.of(userDTO));
+
+        mockMvc.perform(put("/api/v1/users/{userId}",userDTO.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isNoContent());
+
+        verify(userService).updateUser(idArgumentCaptor.capture(),any(UserDTO.class));
+        assertThat(userDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
+        verify(userService).updateUser(idArgumentCaptor.capture(),userDTOArgumentCaptor.capture());
+        assertThat(userDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
+        assertThat(userDTO.getEmail()).isEqualTo(userDTOArgumentCaptor.getValue().getEmail());
     }
 }
