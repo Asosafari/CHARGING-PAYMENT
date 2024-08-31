@@ -2,6 +2,7 @@ package com.company.charging.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.validation.constraints.Email;
@@ -20,6 +21,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "users")
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +48,13 @@ public class User {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
+    @Builder.Default
     @Column(name = "transactions")
     @OneToMany(mappedBy = "user")
     private Set<Transaction> transactions = new HashSet<>();
 
+
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "user_charging_plan",
             joinColumns = @JoinColumn(name = "user_id"),

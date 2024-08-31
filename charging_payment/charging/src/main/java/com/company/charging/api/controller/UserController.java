@@ -1,13 +1,18 @@
 package com.company.charging.api.controller;
 
 import com.company.charging.api.dto.UserDTO;
+import com.company.charging.api.exception.NotFoundException;
 import com.company.charging.api.service.UserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Author: ASOU SAFARI
@@ -26,4 +31,10 @@ public class UserController {
 
         return userService.listOfUsers(pageNumber,pageSize);
     }
+
+    @GetMapping("/api/v1/users/{userId}")
+    public UserDTO getUserDTO(@PathVariable("userId") Long userId){
+        return userService.getUserById(userId).orElseThrow(NotFoundException::new);
+    }
+
 }
