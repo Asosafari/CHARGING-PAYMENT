@@ -35,13 +35,12 @@ public class ChargingPlanController {
         return chargingService.listOfChargingPlan(graterThanRate,lessThanPricePerUnit,pageNumber,pageSize,sortProperty);
     }
 
-    @GetMapping("/api/v1/plans/{planId}")
-    public ChargingPlanDTO getPlansById(@PathVariable("planId") Long planId){
+    @GetMapping("/api/v1/plans/{chargingPlanId}")
+    public ChargingPlanDTO getPlansById(@PathVariable("ChargingPlanId") Long planId){
         return chargingService.getPlanById(planId).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping("/api/v1/plans/create")
-
     public ResponseEntity<ChargingPlanDTO> createCharging(@Validated @RequestBody ChargingPlanDTO chargingPlanDTO){
         ChargingPlanDTO savePlan = chargingService.CreateChargingPlan(chargingPlanDTO);
         HttpHeaders headers = new HttpHeaders();
@@ -49,5 +48,13 @@ public class ChargingPlanController {
         return new ResponseEntity<>(savePlan,headers, HttpStatus.CREATED);
     }
 
+    @PutMapping("/api/v1/plans/{chargingPlanId}")
+    public ResponseEntity updateChargingPlan(@PathVariable("chargingPlanId")Long chargingPlanId, @RequestBody ChargingPlanDTO chargingPlanDTO){
+
+        if (chargingService.updatePlan(chargingPlanId,chargingPlanDTO).isEmpty()){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
 }

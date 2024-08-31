@@ -4,7 +4,6 @@ import com.company.charging.api.dto.ChargingPlanDTO;
 
 import com.company.charging.api.service.ChargingService;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,10 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.verify;
@@ -48,7 +48,7 @@ class ChargingPlanControllerTest {
     ArgumentCaptor<Long> idArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<ChargingPlanDTO> userDTOArgumentCaptor;
+    ArgumentCaptor<ChargingPlanDTO> planArgumentCaptor;
 
     @BeforeEach
     void setUp() {
@@ -85,5 +85,22 @@ class ChargingPlanControllerTest {
                 .content(objectMapper.writeValueAsString(chargingPlanDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.planName").value("premiumA"));
+    }
+
+    @Test
+    void updateUser() throws Exception {
+        given(planService.updatePlan(any(),any())).willReturn(Optional.of(chargingPlanDTO));
+
+        mockMvc.perform(put("/api/v1/plans/{chargingPlanId}",chargingPlanDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(chargingPlanDTO)))
+                .andExpect(status().isNoContent());
+
+        verify(planService).updatePlan(idArgumentCaptor.capture(),any(ChargingPlanDTO.class));
+        assertThat(chargingPlanDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
+        verify(planService).updatePlan(idArgumentCaptor.capture(), planArgumentCaptor.capture());
+        assertThat(chargingPlanDTO.getId()).isEqualTo(idArgumentCaptor.getValue());
+        assertThat(chargingPlanDTO.getPlanName()).isEqualTo(planArgumentCaptor.getValue().getPlanName());
     }
 }
