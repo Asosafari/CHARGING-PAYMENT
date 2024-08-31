@@ -46,8 +46,13 @@ public abstract class ChargingPlan {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
+    @Builder.Default
     @ManyToMany(mappedBy = "chargingPlans")
     private Set<User> users = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Charging_plan_type",nullable = false)
+    private ChargingPlanType chargingPlanType;
 
     @Version
     private Integer version;
