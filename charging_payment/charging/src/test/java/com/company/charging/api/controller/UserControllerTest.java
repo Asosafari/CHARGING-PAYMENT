@@ -2,6 +2,7 @@ package com.company.charging.api.controller;
 
 import com.company.charging.api.dto.UserDTO;
 import com.company.charging.api.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,5 +60,17 @@ class UserControllerTest {
                  .andExpect(status().isOk())
                  .andExpect(jsonPath("$.content[0].username").value("Gorg_Ali"));
 
+    }
+
+    @Test
+    void createUser() throws Exception {
+        given(userService.saveUser(any())).willReturn(userDTO);
+
+        mockMvc.perform(post("/api/v1/users/create")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("Gorg_Ali"));
     }
 }
