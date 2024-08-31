@@ -34,4 +34,9 @@ public class ChargingPlanController {
         return chargingService.listOfChargingPlan(graterThanRate,lessThanPricePerUnit,pageNumber,pageSize,sortProperty);
     }
 
+    @GetMapping("/api/v1/plans/{planId}")
+    public ChargingPlanDTO getPlansById(@PathVariable("planId") Long planId){
+        return chargingService.getplanById(planId).orElseThrow(NotFoundException::new);
+    }
+
 }
