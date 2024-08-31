@@ -58,4 +58,9 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public UserDTO saveUser(UserDTO userDTO) {
+        return userMapper.mapToDTO(userRepository.save(userMapper.mapToModel(userDTO)));
+    }
 }
