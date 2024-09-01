@@ -35,10 +35,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final DirectPaymentService directPaymentService;
 
     @Override
-    public Page<TransactionDTO> getAllTransacton(String username,
-                                                 String chargingPlanName,
-                                                 Integer pageNumber,
-                                                 Integer pageSize) {
+    public Page<TransactionDTO> getAllTransaction(String username,
+                                                  String chargingPlanName,
+                                                  Integer pageNumber,
+                                                  Integer pageSize) {
 
         PageRequest pageRequest = BuildPageRequest.build(pageNumber, pageSize, username);
         Page<Transaction> transactions;
@@ -66,7 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public Optional<TransactionDTO> createTrasaction(OrderDTO orderDTO) {
+    public Optional<TransactionDTO> createTransaction(OrderDTO orderDTO) {
 
         TransactionDTO transactionDTO = TransactionDTO.builder()
                 .amount(orderDTO.getChargingPlan().getRatePerUnit().multiply(orderDTO.getChargingPlan().getPricePerUnit()))
@@ -119,7 +119,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public boolean deleteTrasction(Long id) {
+    public boolean deleteTransaction(Long id) {
         Optional<Transaction> transaction = transactionRepository.findById(id);
         if (transaction.isPresent()){
             transaction.get().softDelete();
@@ -129,7 +129,14 @@ public class TransactionServiceImpl implements TransactionService {
         return false;
     }
 
+    @Override
+    public Optional<TransactionDTO> getTransaction(Long transactionId) {
+        return Optional.ofNullable(transactionMapper.mapToDto(transactionRepository.findById(transactionId).orElse(null)));
+    }
+
     private String checkoutGatewayPayment(BigDecimal amount) {
+
+        //implement
         return "Successes";
     }
 

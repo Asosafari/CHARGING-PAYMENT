@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface TransactionService {
-    Optional<TransactionDTO> createTrasaction(OrderDTO orderDTO);
-    Page<TransactionDTO> getAllTransacton(String username,
-                                          String chargingPlanName,
-                                          Integer pageNumber,
-                                          Integer pageSize);
+    Optional<TransactionDTO> createTransaction(OrderDTO orderDTO);
+    Page<TransactionDTO> getAllTransaction(String username,
+                                           String chargingPlanName,
+                                           Integer pageNumber,
+                                           Integer pageSize);
 
-    boolean deleteTrasction(Long id);
+    boolean deleteTransaction(Long id);
+
+    Optional<TransactionDTO> getTransaction(Long transactionId);
 }
