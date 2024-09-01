@@ -51,6 +51,8 @@ public class Transaction {
 
     @Transient
     private String description;
+    @Transient
+    private String publicKey;
 
     public void softDelete() {
         this.isDeleted = true;
