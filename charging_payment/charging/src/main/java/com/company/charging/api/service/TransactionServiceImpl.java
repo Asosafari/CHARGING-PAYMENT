@@ -1,9 +1,11 @@
 package com.company.charging.api.service;
 
+import com.company.charging.api.dto.OrderDTO;
 import com.company.charging.api.dto.TransactionDTO;
 import com.company.charging.api.exception.TransactionCreationException;
 import com.company.charging.api.mapper.TransactionMapper;
 import com.company.charging.api.model.*;
+import com.company.charging.api.repository.PaymentRequestRepository;
 import com.company.charging.api.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
+    private final PaymentRequestRepository paymentRequestRepository;
+    private final DirectPaymentService directPaymentService;
 
     @Override
     public Page<TransactionDTO> getAllTransacton(String username,
@@ -49,7 +53,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         }else if (StringUtils.hasText(username) && StringUtils.hasText(chargingPlanName)){
 
-            transactions = transactionRepository.findByUserUsernameAndChargingPlanPlanName(username,chargingPlanName,pageRequest);
+            transactions = transactionRepository
+                    .findByUserUsernameAndChargingPlanPlanName(username,chargingPlanName,pageRequest);
         }
 
         else {
@@ -59,75 +64,58 @@ public class TransactionServiceImpl implements TransactionService {
         return transactions.map(transactionMapper ::mapToDto);
     }
 
-
-
-    private Page<Transaction> getAllTransactionByChargingPlanName(String chargingPlanName, PageRequest pageRequest) {
-        return transactionRepository.findByChargingPlanPlanName(chargingPlanName,pageRequest);
-    }
-
-    private Page<Transaction> getAllTransactionByUsername(String username, PageRequest pageRequest) {
-        return transactionRepository.findByUserUsername(username,pageRequest);
-    }
-
-
     @Override
     @Transactional
-    public Optional<TransactionDTO> createTrasaction(Order order) {
+    public Optional<TransactionDTO> createTrasaction(OrderDTO orderDTO) {
 
-        Transaction transaction = Transaction.builder()
-                .amount(BigDecimal.valueOf
-                        (order.getChargingPlan().getRatePerUnit().doubleValue() *
-                                order.getChargingPlan().getPricePerUnit().doubleValue()))
-                .chargingPlan(order.getChargingPlan())
-                .user(order.getUser())
-                .transactionType(order.getTransactionType())
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+                .amount(orderDTO.getChargingPlan().getRatePerUnit().multiply(orderDTO.getChargingPlan().getPricePerUnit()))
+                .chargingPlanId(orderDTO.getChargingPlan().getId())
+                .userId(orderDTO.getUser().getId())
+                .transactionType(orderDTO.getTransactionType())
                 .isSuccess(false)
+                .isDeleted(false)
                 .build();
 
         try {
-            if (order.getTransactionType().equals(TransactionType.DIRECT)) {
-                String privateKey = transactionRepository.findPrivateKeyCheckout(transaction.getUser().getId());
-                if (privateKey.equals("UNAUTHORIZED")) {
-                    log.warn("Unauthorized direct payment  for user {}", transaction.getUser().getId());
+            if (orderDTO.getTransactionType().equals(TransactionType.DIRECT)) {
+
+                String publicKey = paymentRequestRepository.findPrivateKeyCheckout(transactionDTO.getUserId());
+                transactionDTO.setPublicKey(publicKey);
+
+                if (publicKey.equals("UNAUTHORIZED")) {
+                    log.warn("Unauthorized direct payment  for user {}", transactionDTO.getUserId());
                     return Optional.empty();
                 }
 
-                if (checkoutDirectPayment(transaction.getAmount(), privateKey).equals("Successes")) {
-                    transaction.setSuccess(true);
+                if (directPaymentService.processPayment(transactionDTO)) {
+                    transactionDTO.setSuccess(true);
                 } else {
-                    log.error("Direct Payment Failed for user {}", transaction.getUser().getId());
+                    log.error("Direct Payment Failed for user {}", transactionDTO.getUserId());
                 }
 
-
-                if (order.getTransactionType().equals(TransactionType.GATEWAY)) {
-                    if (checkoutGatewayPayment(transaction.getAmount()).equals("Successes")) {
-                        transaction.setSuccess(true);
+                if (orderDTO.getTransactionType().equals(TransactionType.GATEWAY)) {
+                    if (checkoutGatewayPayment(transactionDTO.getAmount()).equals("Successes")) {
+                        transactionDTO.setSuccess(true);
                     } else {
-                        log.error("Gateway Payment Failed for user {}", transaction.getUser().getId());
+                        log.error("Gateway Payment Failed for user {}", transactionDTO.getUserId());
                     }
                 }
             }
 
-            transaction.setDescription("Charging successful balance : "
-                    + transactionRepository.charging(transaction.getUser().getId(),order.getChargingPlan().getRatePerUnit()));
+            transactionDTO.setDescription("Charging successful balance : "
+                    + paymentRequestRepository
+                    .charging(transactionDTO.getUserId(), orderDTO.getChargingPlan().getRatePerUnit()));
 
-            return Optional.of(transactionMapper.mapToDto(transactionRepository.save(transaction)));
+            return Optional.of(transactionMapper
+                    .mapToDto(transactionRepository
+                            .save(transactionMapper
+                                    .mapToModel(transactionDTO))));
 
         } catch (Exception e) {
-            log.error("Failed to create transaction for order {}: {}", order, e.getMessage());
+            log.error("Failed to create transaction for order {}: {}", orderDTO, e.getMessage());
             throw new TransactionCreationException("Failed to create transaction", e);
         }
-    }
-
-
-    private String checkoutGatewayPayment(BigDecimal amount) {
-        return "Successes";
-    }
-
-
-    private String checkoutDirectPayment(BigDecimal amount, String privateKey) {
-
-        return "Successes";
     }
 
     @Override
@@ -141,6 +129,17 @@ public class TransactionServiceImpl implements TransactionService {
         return false;
     }
 
+    private String checkoutGatewayPayment(BigDecimal amount) {
+        return "Successes";
+    }
+
+    private Page<Transaction> getAllTransactionByChargingPlanName(String chargingPlanName, PageRequest pageRequest) {
+        return transactionRepository.findByChargingPlanPlanName(chargingPlanName,pageRequest);
+    }
+
+    private Page<Transaction> getAllTransactionByUsername(String username, PageRequest pageRequest) {
+        return transactionRepository.findByUserUsername(username,pageRequest);
+    }
 
 }
 
