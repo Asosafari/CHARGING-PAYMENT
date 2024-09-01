@@ -16,12 +16,6 @@ public interface TransactionRepository extends JpaRepository<Transaction,Long> {
                                                                 String chargingPlanName,
                                                                 PageRequest pageRequest);
 
-    @Procedure(procedureName = "get_authorized_bank_users")
-    String findPrivateKeyCheckout(Long id);
-
-    @Procedure(procedureName = "charging_account")
-    BigDecimal charging(Long userId, BigDecimal ratePerUnit);
-
     Page<Transaction> findByChargingPlanPlanName(String chargingPlanName, PageRequest pageRequest);
     Page<Transaction> findByUserUsername(String username, PageRequest pageRequest);
 }
