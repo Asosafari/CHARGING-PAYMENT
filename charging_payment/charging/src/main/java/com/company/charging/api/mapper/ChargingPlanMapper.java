@@ -15,7 +15,7 @@ import org.mapstruct.Mapper;
 public interface ChargingPlanMapper {
     ChargingPlanDTO mapToDTO (ChargingPlan chargingPlan);
 
-    default ChargingPlan maptomodel  (ChargingPlanDTO chargingPlanDTO){
+    default ChargingPlan mapToModel(ChargingPlanDTO chargingPlanDTO){
         ChargingPlanFactory factory = ChargingPlanFactoryProvider.createChargingPlan(chargingPlanDTO.getChargingPlanType());
         return factory.createChargingPlan(chargingPlanDTO.getChargingPlanType(),
                 chargingPlanDTO.getPlanName(),

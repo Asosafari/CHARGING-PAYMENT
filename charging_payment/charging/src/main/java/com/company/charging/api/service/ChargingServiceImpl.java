@@ -68,7 +68,7 @@ public class ChargingServiceImpl implements ChargingService {
         return chargingPlanMapper
                 .mapToDTO(chargingPlanRepository.
                         save(chargingPlanMapper
-                                .maptomodel(chargingPlanDTO)));
+                                .mapToModel(chargingPlanDTO)));
     }
 
     @Override
