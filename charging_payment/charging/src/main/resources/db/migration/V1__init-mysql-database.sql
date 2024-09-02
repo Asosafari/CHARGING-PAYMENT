@@ -52,7 +52,7 @@ CREATE TABLE authorized_bank_users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     bank_user_id BIGINT NOT NULL UNIQUE,
-    token VARCHAR(255) NOT NULL UNIQUE,
+    encrypted_public_key BLOB NOT NULL,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 )engine=InnoDB;
@@ -62,11 +62,12 @@ CREATE TABLE successful_transactions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     transaction_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    token VARCHAR(255) NOT NULL,
+    encrypted_public_key BLOB NOT NULL,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (transaction_id) REFERENCES transactions(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 )engine=InnoDB;
+
 CREATE TABLE logging_event (
   event_id BIGINT NOT NULL AUTO_INCREMENT,
   timestmp BIGINT NOT NULL,

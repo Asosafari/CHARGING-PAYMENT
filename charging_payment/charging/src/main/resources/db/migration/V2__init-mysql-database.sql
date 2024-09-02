@@ -7,7 +7,7 @@ JOIN charging_plans cp ON t.charging_plan_id = cp.id;
 
 
 CREATE VIEW successful_transaction_view AS
-SELECT st.id AS successful_transaction_id, st.transaction_id, st.user_id, u.username, st.token, st.created_date
+SELECT st.id AS successful_transaction_id, st.transaction_id, st.user_id, u.username, st.encrypted_public_key, st.created_date
 FROM successful_transactions st
 JOIN users u ON st.user_id = u.id;
 
@@ -16,19 +16,19 @@ DELIMITER $$
 
 CREATE PROCEDURE get_authorized_bank_users(
     IN p_user_id BIGINT,
-    OUT p_token VARCHAR(255)
+    OUT p_encrypted_public_key VARCHAR(255)
 )
 BEGIN
-    DECLARE v_token VARCHAR(255);
-    SELECT token INTO v_token
+    DECLARE v_encrypted_public_key VARCHAR(255);
+    SELECT encrypted_public_key INTO v_encrypted_public_key
     FROM authorized_bank_users
     WHERE user_id = p_user_id;
 
 
     IF v_token IS NOT NULL THEN
-        SET p_token = v_token;
+        SET p_encrypted_public_key = v_encrypted_public_key;
     ELSE
-        SET p_token = '"UNAUTHORIZED"';
+        SET p_encrypted_public_key = '"UNAUTHORIZED"';
     END IF;
 END$$
 
@@ -55,3 +55,6 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+
