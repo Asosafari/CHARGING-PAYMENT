@@ -1,7 +1,6 @@
 package com.company.charging.api.service;
 
 import com.company.charging.api.dto.UserDTO;
-import com.company.charging.api.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
