@@ -1,0 +1,154 @@
+POST http://localhost:8080/api/v1/users/create
+Content-Type: application/json
+
+[
+    {
+        "username": "user1",
+        "password": "password1",
+        "email": "user1@example.com",
+        "balance": 504.0
+    },
+    {
+        "username": "user2",
+        "password": "password2",
+        "email": "user2@example.com",
+        "balance": 600.0
+    },
+    {
+        "username": "user3",
+        "password": "password3",
+        "email": "user3@example.com",
+        "balance": 700.0
+    },
+    {
+        "username": "user4",
+        "password": "password4",
+        "email": "user4@example.com",
+        "balance": 800.0
+    },
+    {
+        "username": "user5",
+        "password": "password5",
+        "email": "user5@example.com",
+        "balance": 900.0
+    }
+]
+
+[
+
+
+
+    {
+        "planName": "Basic Plan 1",
+        "chargingPlanType": "BASIC",
+        "ratePerUnit": 10.0,
+        "pricePerUnit": 100.0,
+        "description": "Basic plan with basic features."
+    },
+    {
+        "planName": "Basic Plan 2",
+        "chargingPlanType": "BASIC",
+        "ratePerUnit": 12.0,
+        "pricePerUnit": 120.0,
+        "description": "Basic plan with slightly better features."
+    },
+    {
+        "planName": "Basic Plan 3",
+       "chargingPlanType": "BASIC",
+        "ratePerUnit": 15.0,
+        "pricePerUnit": 150.0,
+        "description": "Basic plan with advanced features."
+    },
+    {
+        "planName": "Basic Plan 4",
+        "chargingPlanType": "BASIC",
+        "ratePerUnit": 20.0,
+        "pricePerUnit": 200.0,
+        "description": "Basic plan for premium users."
+    },
+    {
+        "planName": "Basic Plan 5",
+        "chargingPlanType": "BASIC",
+        "ratePerUnit": 25.0,
+        "pricePerUnit": 250.0,
+        "description": "Basic plan for high-demand users."
+    }
+]
+
+[
+    {
+        "planName": "Premium Plan 1",
+        "chargingPlanType": "PREMIUM",
+        "ratePerUnit": 30.0,
+        "pricePerUnit": 300.0,
+        "description": "Premium plan with top-tier features."
+    },
+    {
+        "planName": "Premium Plan 2",
+        "chargingPlanType": "PREMIUM",
+        "ratePerUnit": 35.0,
+        "pricePerUnit": 350.0,
+        "description": "Premium plan with extra features."
+    },
+    {
+        "planName": "Premium Plan 3",
+        "chargingPlanType": "PREMIUM",
+        "ratePerUnit": 40.0,
+        "pricePerUnit": 400.0,
+        "description": "Premium plan for high-end users."
+    },
+    {
+        "planName": "Premium Plan 4",
+        "chargingPlanType": "PREMIUM",
+        "ratePerUnit": 45.0,
+        "pricePerUnit": 450.0,
+        "description": "Premium plan with exclusive features."
+    },
+    {
+        "planName": "Premium Plan 5",
+        "chargingPlanType": "PREMIUM",
+        "ratePerUnit": 50.0,
+        "pricePerUnit": 500.0,
+        "description": "Premium plan for luxury users."
+    }
+
+]
+[
+    {
+        "userId": 1,
+        "chargingPlanId": 1,
+        "amount": 100.0,
+        "transactionType": "DIRECT",
+        "isSuccess": true
+    },
+    {
+        "userId": 2,
+        "chargingPlanId": 2,
+        "amount": 120.0,
+        "transactionType": "DIRECT",
+        "isSuccess": true
+    },
+    {
+        "userId": 3,
+        "chargingPlanId": 3,
+        "amount": 150.0,
+        "transactionType": "DIRECT",
+        "isSuccess": true
+    },
+    {
+        "userId": 4,
+        "chargingPlanId": 4,
+        "amount": 200.0,
+        "transactionType": "GATEWAY",
+        "isSuccess": true
+    },
+    {
+        "userId": 5,
+        "chargingPlanId": 5,
+        "amount": 250.0,
+        "transactionType": "GATEWAY",
+        "isSuccess": true
+    }
+]
+
+

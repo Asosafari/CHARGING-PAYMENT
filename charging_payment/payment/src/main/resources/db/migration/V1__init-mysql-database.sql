@@ -1,0 +1,26 @@
+CREATE TABLE payment_users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    charging_user_id BIGINT UNIQUE NOT NULL,
+    account_balance DECIMAL(19, 4) NOT NULL CHECK (account_balance >= 0.00),
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE key_payment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    charging_user_id BIGINT NOT NULL,
+    FOREIGN KEY (charging_user_id) REFERENCES payment_users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    amount DECIMAL(19, 4) NOT NULL CHECK (amount >= 0.00),
+    is_success BOOLEAN NOT NULL,
+    payment_type ENUM('DIRECT', 'GATEWAY') NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES payment_users(id) ON DELETE CASCADE
+);
