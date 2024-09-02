@@ -67,8 +67,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "charging_plan_id"))
     private Set<ChargingPlan> chargingPlans = new HashSet<>();
 
-    @Version
-    private Integer version;
 
     @CreationTimestamp
     @Column(nullable = false)

@@ -53,6 +53,8 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
+
+
     @Transient
     private String description;
     @Transient

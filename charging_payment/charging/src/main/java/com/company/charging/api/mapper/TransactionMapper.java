@@ -37,6 +37,8 @@ public class TransactionMapper {
                 .createdDate(LocalDateTime.now())
                 .amount(transactionDTO.getAmount())
                 .isSuccess(transactionDTO.isSuccess())
+               .transactionType(transactionDTO.getTransactionType())
+               .user(transactionDTO.getUser())
                 .isDeleted(transactionDTO.isDeleted())
                 .build();
     }

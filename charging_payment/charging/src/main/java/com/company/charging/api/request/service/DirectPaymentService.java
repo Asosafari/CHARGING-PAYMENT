@@ -34,7 +34,8 @@ public class DirectPaymentService {
         DirectPaymentRequest directPaymentRequest = createPaymentRequest(transactionDTO);
         RestTemplate restTemplate = restTemplateBuilder.build();
         String paymentApiUrl = "/api/v1/payments/check";
-        ResponseEntity<String> response = restTemplate.postForEntity(paymentApiUrl, directPaymentRequest, String.class);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(paymentApiUrl, directPaymentRequest, java.lang.String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             transactionDTO.setSuccess(true);

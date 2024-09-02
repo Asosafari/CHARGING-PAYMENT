@@ -29,13 +29,12 @@ public class BasicChargingPlan extends ChargingPlan {
                              boolean isDeleted,
                              Set<User> users,
                              ChargingPlanType chargingPlanType,
-                             Integer version,
                              LocalDateTime createdDate,
                              LocalDateTime updateDate) {
 
 
         super(id, planName, ratePerUnit, pricePerUnit, description,
-                isDeleted, users, chargingPlanType, version, createdDate, updateDate);
+                isDeleted, users, chargingPlanType, createdDate, updateDate);
     }
 
 }

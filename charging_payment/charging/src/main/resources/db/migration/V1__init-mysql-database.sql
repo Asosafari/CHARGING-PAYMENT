@@ -18,7 +18,6 @@ CREATE TABLE charging_plans (
     rate_per_unit DECIMAL(19, 4) NOT NULL,
     price_per_unit DECIMAL(19, 4) NOT NULL,
     description TEXT,
-    version INT NOT NULL DEFAULT 1,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 )engine=InnoDB;
@@ -41,7 +40,6 @@ CREATE TABLE transactions (
 CREATE TABLE user_charging_plan (
     user_id BIGINT NOT NULL,
     charging_plan_id BIGINT NOT NULL,
-    version INT NOT NULL DEFAULT 1,
     PRIMARY KEY (user_id, charging_plan_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (charging_plan_id) REFERENCES charging_plans(id)

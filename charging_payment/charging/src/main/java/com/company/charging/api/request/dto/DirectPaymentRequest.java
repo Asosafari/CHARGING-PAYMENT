@@ -17,7 +17,6 @@ public class DirectPaymentRequest {
     private Long userId;
     private BigDecimal amount;
     private String publicKey;
-    private String encryptedData;
     private PaymentType paymentType;
 
 }

@@ -43,12 +43,11 @@ public class TransactionController {
     public ResponseEntity<TransactionDTO> createTransaction(@RequestBody OrderDTO orderDTO){
         Optional<TransactionDTO> saveTransactionDto = transactionService.createTransaction(orderDTO);
         if (saveTransactionDto.isPresent()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/api/v1/transactions/" +saveTransactionDto.get().getId());
-            return new ResponseEntity<>(saveTransactionDto.get(), headers, HttpStatus.CREATED);
+
+            return new ResponseEntity<>(saveTransactionDto.get(), HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/api/v1/transactions/{transactionId}")

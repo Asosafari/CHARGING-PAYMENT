@@ -74,6 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(orderDTO.getChargingPlan().getRatePerUnit().multiply(orderDTO.getChargingPlan().getPricePerUnit()))
                 .chargingPlanId(orderDTO.getChargingPlan().getId())
                 .userId(orderDTO.getUser().getId())
+                .user(orderDTO.getUser())
                 .transactionType(orderDTO.getTransactionType())
                 .isSuccess(false)
                 .isDeleted(false)
@@ -92,6 +93,8 @@ public class TransactionServiceImpl implements TransactionService {
 
                 if (directPaymentService.processPayment(transactionDTO)) {
                     transactionDTO.setSuccess(true);
+
+                    transactionDTO.setChargingPlan(orderDTO.getChargingPlan());
                 } else {
                     log.error("Direct Payment Failed for user {}", transactionDTO.getUserId());
                 }
@@ -116,9 +119,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         } catch (Exception e) {
             log.error("Failed to create transaction for order {}: {}", orderDTO, e.getMessage());
-            throw new TransactionCreationException("Failed to create transaction", e);
+            //throw new TransactionCreationException("Failed to create transaction", e);
+            System.out.println(e.getMessage());
+            return Optional.empty();
+
         }
     }
+
 
     @Override
     public boolean deleteTransaction(Long id) {

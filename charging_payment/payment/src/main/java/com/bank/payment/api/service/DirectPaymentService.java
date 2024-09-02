@@ -1,11 +1,9 @@
 package com.bank.payment.api.service;
 
-import com.bank.payment.api.model.Key;
+import com.bank.payment.api.factory.PaymentFactoryProvider;
+import com.bank.payment.api.model.*;
 import com.bank.payment.api.dto.PaymentRequest;
 import com.bank.payment.api.mapper.PaymentMapper;
-import com.bank.payment.api.model.Payment;
-import com.bank.payment.api.model.PaymentStatus;
-import com.bank.payment.api.model.PaymentType;
 import com.bank.payment.api.repository.KeyRepository;
 import com.bank.payment.api.repository.PaymentRepository;
 import com.bank.payment.api.repository.PaymentUserRepository;
@@ -31,6 +29,7 @@ public class DirectPaymentService implements PaymentStrategy {
     private final PaymentRepository paymentRepository;
     private final KryService kryService;
     private final PaymentMapper paymentMapper;
+    private final PaymentUserRepository paymentUserRepository;
 
 
     @Override
@@ -38,12 +37,17 @@ public class DirectPaymentService implements PaymentStrategy {
     public boolean processPayment(PaymentRequest paymentRequest) {
         if (paymentRequest.getPaymentType().equals(PaymentType.DIRECT)) {
             try {
+
+
                 Optional<Key> key = kryService.findKey(paymentRequest.getUserId());
 
                 if (validateDecryptedData(key.get().getToken(), paymentRequest)) {
-                    paymentRepository.updateAccountBalance(paymentRequest.getUserId(),paymentRequest.getAmount());
+                    PaymentUser paymentUser = paymentUserRepository.findPaymentUserByChargingUserId(paymentRequest.getUserId());
+                    paymentUserRepository.updateAccountBalance(paymentUser.getId(),paymentRequest.getAmount());
                     Payment payment = paymentMapper.DtoToModel(paymentRequest);
                     payment.setPaymentStatus(PaymentStatus.COMPLETED);
+                    payment.setPaymentUser(paymentUser);
+                    payment.setPaymentType(paymentRequest.getPaymentType());
                     paymentRepository.save(payment);
                     return true;
                 } else {
@@ -59,8 +63,11 @@ public class DirectPaymentService implements PaymentStrategy {
     }
 
 private boolean validateDecryptedData(String decryptedData, PaymentRequest paymentRequest) {
-    String expectedData = paymentRequest.getUserId() + "|" + paymentRequest.getAmount();
-    return decryptedData.equals(expectedData);
+
+        if (decryptedData.equals(paymentRequest.getPublicKey())){
+            return true;
+        }
+        return false;
 }
 
 }

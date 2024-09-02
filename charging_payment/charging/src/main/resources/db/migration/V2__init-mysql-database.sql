@@ -20,12 +20,12 @@ CREATE PROCEDURE get_authorized_bank_users(
 )
 BEGIN
     DECLARE v_token_ch VARCHAR(255);
-    SELECT encrypted_public_key INTO v_token_ch
+    SELECT token_ch INTO v_token_ch
     FROM authorized_bank_users
     WHERE user_id = p_user_id;
 
 
-    IF encrypted_public_key IS NOT NULL THEN
+    IF v_token_ch IS NOT NULL THEN
         SET p_token_ch = v_token_ch;
     ELSE
         SET p_token_ch = '"UNAUTHORIZED"';

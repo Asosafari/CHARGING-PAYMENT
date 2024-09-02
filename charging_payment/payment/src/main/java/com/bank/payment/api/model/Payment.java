@@ -45,6 +45,7 @@ public abstract class Payment {
     @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
 
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;

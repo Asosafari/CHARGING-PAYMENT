@@ -20,7 +20,8 @@ public class PaymentMapper {
    private final PaymentUserRepository paymentUserRepository;
 
    public Payment DtoToModel(PaymentRequest paymentRequest){
-       PaymentFactory factory = PaymentFactoryProvider.getPaymentFactory(paymentRequest.getPaymentType().toString());
+       PaymentFactory factory = PaymentFactoryProvider.getPaymentFactory(
+               paymentRequest.getPaymentType().toString());
        return factory.createPayment(paymentUserRepository.findPaymentUserByChargingUserId(paymentRequest.getUserId()),
                paymentRequest.getAmount(),true,paymentRequest.getPaymentType());
    }

@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class KryService {
-    private KeyRepository keyRepository;
+    private final KeyRepository keyRepository;
 
     Optional<Key> findKey(Long chargingUserId){
         return keyRepository.findKeyByPaymentUserId(chargingUserId);

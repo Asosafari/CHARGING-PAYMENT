@@ -22,7 +22,7 @@ public class PaymentController {
 
     private final PaymentStrategy strategy;
 
-    @PostMapping("/api/v1/payments/check")
+    @PostMapping("/check")
     public ResponseEntity<String> processPayment(@RequestBody PaymentRequest paymentRequest) {
         boolean isPaymentSuccessful = strategy.processPayment(paymentRequest);
 

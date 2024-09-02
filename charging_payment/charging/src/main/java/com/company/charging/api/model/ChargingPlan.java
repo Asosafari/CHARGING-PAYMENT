@@ -70,9 +70,6 @@ public abstract class ChargingPlan {
     @Column(name = "Charging_plan_type",nullable = false)
     private ChargingPlanType chargingPlanType;
 
-    @Version
-    private Integer version;
-
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdDate;
