@@ -5,6 +5,7 @@ import com.company.charging.api.model.ChargingPlanType;
 import com.company.charging.api.model.User;
 import jakarta.persistence.Entity;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.Set;
  * Time:12:26 AM
  */
 @Entity
+@NoArgsConstructor
 public class PremiumChargingPlan extends ChargingPlan {
 
     @Builder

@@ -2,8 +2,10 @@ package com.company.charging.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.validation.constraints.Email;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,7 +24,11 @@ import java.util.Set;
 @Data
 @Table(name = "users")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

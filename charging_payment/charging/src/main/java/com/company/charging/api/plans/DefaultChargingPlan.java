@@ -5,6 +5,7 @@ import com.company.charging.api.model.ChargingPlanType;
 import com.company.charging.api.model.User;
 import jakarta.persistence.Entity;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.Set;
  * Time:1:13 AM
  */
 @Entity
+@NoArgsConstructor
 public class DefaultChargingPlan extends ChargingPlan {
 
     @Builder

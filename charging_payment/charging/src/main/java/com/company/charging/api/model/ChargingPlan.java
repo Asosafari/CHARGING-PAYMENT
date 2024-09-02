@@ -18,18 +18,18 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "charging_plan")
+@Table(name = "charging_plans")
 @Getter
 @Setter
 @AllArgsConstructor
-@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
 public abstract class ChargingPlan {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "plan_name",unique = true, nullable = false)
     private String planName;
 
@@ -46,7 +46,6 @@ public abstract class ChargingPlan {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
-    @Builder.Default
     @ManyToMany(mappedBy = "chargingPlans")
     private Set<User> users = new HashSet<>();
 
