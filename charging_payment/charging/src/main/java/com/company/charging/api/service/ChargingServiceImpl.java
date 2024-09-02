@@ -41,10 +41,10 @@ public class ChargingServiceImpl implements ChargingService {
             plans = getAllPlansByUpperLimitRate(greaterThanRate,pageRequest);
         } else if (greaterThanRate == null && lessThanPricePerUnit != null) {
             plans = getAllPlansByLowerLimitPrice(lessThanPricePerUnit, pageRequest);
-        } else if (greaterThanRate == null){
-            plans = chargingPlanRepository.findAll(pageRequest);
-        }else {
+        } else if (greaterThanRate != null && lessThanPricePerUnit != null){
             plans = chargingPlanRepository.findByRatePerUnitGreaterThanAndPricePerUnitLessThan(greaterThanRate,lessThanPricePerUnit,pageRequest);
+        }else {
+            plans = chargingPlanRepository.findAll(pageRequest);
         }
         return plans.map(chargingPlanMapper ::mapToDTO);
 
