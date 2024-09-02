@@ -1,6 +1,7 @@
 package com.company.charging.api.dto;
 
 import com.company.charging.api.model.TransactionType;
+import com.company.charging.api.service.PaymentType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,11 +15,10 @@ import java.math.BigDecimal;
 @Builder
 @Data
 public class DirectPaymentRequest {
-
     private Long userId;
-    private Long chargingPlanId;
-    private TransactionType transactionType;
     private BigDecimal amount;
     private String publicKey;
+    private String encryptedData;
+    private PaymentType paymentType;
 
 }
