@@ -30,6 +30,9 @@ public class BuildPageRequest {
                 queryPageSize = pageSize;
             }
         }
+        if (sortProperty == null){
+            sortProperty = "";
+        }
         Sort sort = Sort.by(Sort.Order.asc(sortProperty));
         return PageRequest.of(queryPageNumber,queryPageSize,sort);
     }
