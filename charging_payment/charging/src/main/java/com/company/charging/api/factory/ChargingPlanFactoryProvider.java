@@ -14,6 +14,7 @@ public class ChargingPlanFactoryProvider {
         return switch (chargingPlanType.name()) {
             case "BASIC" -> new BasicChargingPlanFactory();
             case "PREMIUM" -> new PremiumChargingPlanFactor();
+            case "DEFAULT" -> new DefaultChargingPlanFactory();
             default -> new DefaultChargingPlanFactory();
         };
     }

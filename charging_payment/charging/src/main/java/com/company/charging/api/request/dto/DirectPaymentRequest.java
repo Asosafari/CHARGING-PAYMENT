@@ -1,6 +1,5 @@
-package com.company.charging.api.dto;
+package com.company.charging.api.request.dto;
 
-import com.company.charging.api.model.TransactionType;
 import com.company.charging.api.service.PaymentType;
 import lombok.Builder;
 import lombok.Data;

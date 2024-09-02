@@ -24,7 +24,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class TransactionController {
-    TransactionService transactionService;
+    private final TransactionService transactionService;
 
     @GetMapping("/api/v1/transactions")
     public Page<TransactionDTO> listOfTransactions(@RequestParam(required = false) String username,
@@ -51,7 +51,7 @@ public class TransactionController {
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @DeleteMapping("/api/v1/users/{transactionId}")
+    @DeleteMapping("/api/v1/transactions/{transactionId}")
     public ResponseEntity deleteTransaction(@PathVariable("transactionId") Long transactionId){
 
         if (!transactionService.deleteTransaction(transactionId)){
@@ -59,5 +59,7 @@ public class TransactionController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 
 }

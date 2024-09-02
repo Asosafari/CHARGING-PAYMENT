@@ -3,10 +3,12 @@ package com.company.charging.api.service;
 import com.company.charging.api.dto.OrderDTO;
 import com.company.charging.api.dto.TransactionDTO;
 import com.company.charging.api.exception.TransactionCreationException;
+
 import com.company.charging.api.mapper.TransactionMapper;
 import com.company.charging.api.model.*;
-import com.company.charging.api.repository.PaymentRequestRepository;
+import com.company.charging.api.request.rpository.PaymentRequestRepository;
 import com.company.charging.api.repository.TransactionRepository;
+import com.company.charging.api.request.service.DirectPaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
         try {
             if (orderDTO.getTransactionType().equals(TransactionType.DIRECT)) {
 
-                String publicKey = paymentRequestRepository.findPrivateKeyCheckout(transactionDTO.getUserId());
+                String publicKey = paymentRequestRepository.findEncryptedPublicKey(transactionDTO.getUserId());
                 transactionDTO.setPublicKey(publicKey);
 
                 if (publicKey.equals("UNAUTHORIZED")) {

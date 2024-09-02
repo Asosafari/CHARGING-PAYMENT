@@ -1,4 +1,4 @@
-package com.company.charging.api.repository;
+package com.company.charging.api.request.rpository;
 
 import com.company.charging.api.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +18,5 @@ public interface PaymentRequestRepository extends JpaRepository<User,Long> {
     BigDecimal charging(Long userId, BigDecimal ratePerUnit);
 
     @Procedure(procedureName = "get_authorized_bank_users")
-    String findPrivateKeyCheckout(Long id);
-
+    String findEncryptedPublicKey(Long id);
 }

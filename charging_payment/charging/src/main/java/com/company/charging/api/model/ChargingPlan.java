@@ -1,9 +1,16 @@
 package com.company.charging.api.model;
 
+import com.company.charging.api.plans.BasicChargingPlan;
+import com.company.charging.api.plans.DefaultChargingPlan;
+import com.company.charging.api.plans.PremiumChargingPlan;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -17,6 +24,7 @@ import java.util.Set;
  * Time:12:17 AM
  */
 
+
 @Entity
 @Table(name = "charging_plans")
 @Getter
@@ -24,6 +32,15 @@ import java.util.Set;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = BasicChargingPlan.class, name = "BASIC"),
+        @JsonSubTypes.Type(value = PremiumChargingPlan.class, name = "PREMIUM"),
+        @JsonSubTypes.Type(value = DefaultChargingPlan.class, name = "DEFAULT")
+})
 public abstract class ChargingPlan {
 
 
