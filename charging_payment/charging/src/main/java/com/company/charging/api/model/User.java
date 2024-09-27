@@ -38,7 +38,7 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false)
-    @Size(min = 8,max = 12)
+//    @Size(min = 8,max = 12)
     private String password;
 
     @Column(unique = true, nullable = false)
@@ -54,18 +54,28 @@ public class User {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
+    @Column(name = "is_Authorized", nullable = false)
+    private boolean isAuthorized;
+
     @Builder.Default
     @Column(name = "transactions")
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private Set<Transaction> transactions = new HashSet<>();
 
 
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_charging_plan",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "charging_plan_id"))
     private Set<ChargingPlan> chargingPlans = new HashSet<>();
+
+    @Builder.Default
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 
     @CreationTimestamp
@@ -79,6 +89,9 @@ public class User {
     public void softDelete() {
         this.isDeleted = true;
         this.isActive = false;
+    }
+    public void addRole(Role role){
+        roles.add(role);
     }
 
 }
