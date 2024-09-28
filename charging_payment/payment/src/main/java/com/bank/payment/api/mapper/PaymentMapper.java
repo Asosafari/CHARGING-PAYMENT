@@ -4,14 +4,17 @@ import com.bank.payment.api.dto.PaymentRequest;
 import com.bank.payment.api.factory.PaymentFactory;
 import com.bank.payment.api.factory.PaymentFactoryProvider;
 import com.bank.payment.api.model.Payment;
+import com.bank.payment.api.model.PaymentUser;
 import com.bank.payment.api.repository.PaymentUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Author: ASOU SAFARI
  * Date:9/1/24
- * Time:11:01 PM
+ * Time:11:01 PM
  */
 @Component
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class PaymentMapper {
    public Payment DtoToModel(PaymentRequest paymentRequest){
        PaymentFactory factory = PaymentFactoryProvider.getPaymentFactory(
                paymentRequest.getPaymentType().toString());
-       return factory.createPayment(paymentUserRepository.findPaymentUserByChargingUserId(paymentRequest.getUserId()),
+       return factory.createPayment(paymentUserRepository.findPaymentUserByUsername(paymentRequest.getUsername()).get(),
                paymentRequest.getAmount(),true,paymentRequest.getPaymentType());
    }
 

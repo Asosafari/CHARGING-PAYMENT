@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
  */
 
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PaymentUserMapper {
-
      PaymentUser mapToModel(PaymentUserRequest paymentUserRequest);
 }

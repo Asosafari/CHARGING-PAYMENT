@@ -25,20 +25,14 @@ public class PaymentUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "charging_user_id",unique = true,nullable = false)
-    private Long chargingUserId;
+    @Column(name = "username",unique = true,nullable = false)
+    private String username;
 
 
     @Column(name = "account_balance", nullable = false)
     @DecimalMin(value = "0.00")
     private BigDecimal accountBalance;
 
-
-    @OneToOne(mappedBy = "paymentUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Key key;
-
-    @Transient
-    private String publicKey;
 
     @OneToMany(mappedBy = "paymentUser")
     private Set<Payment> payments = new HashSet<>();
