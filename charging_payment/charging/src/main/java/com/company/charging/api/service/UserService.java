@@ -16,6 +16,7 @@ public interface UserService {
     Page<UserDTO> listOfUsers(Integer pageNumber, Integer pageSize);
     Optional<UserDTO> getUserById(Long id);
     Optional<UserDTO> updateUser(Long id, UserDTO userDto);
+    Optional<UserDTO> patchUser(Long id, UserDTO userDto);
     boolean deleteUser(Long id);
     UserDTO saveUser(UserDTO userDTO);
 
