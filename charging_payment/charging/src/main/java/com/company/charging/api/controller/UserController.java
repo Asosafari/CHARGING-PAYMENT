@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -39,7 +40,7 @@ public class UserController {
         return userService.getUserById(userId).orElseThrow(NotFoundException::new);
     }
 
-    @PostMapping("/api/v1/users/create")
+    @PostMapping("/api/v1/create")
     public ResponseEntity<UserDTO> createUser(@Validated @RequestBody UserDTO userDTO){
         UserDTO saveUserDto = userService.saveUser(userDTO);
         HttpHeaders headers = new HttpHeaders();
@@ -66,6 +67,7 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
 
 }
