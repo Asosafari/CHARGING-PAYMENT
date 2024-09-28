@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class PaymentUserRegisterRequest {
     private Long  chargingUserId;
     private BigDecimal amount;
-    private String publicKey;
+    private boolean isAuthorize;
     private PaymentType paymentType;
     private BigDecimal accountBalance;
 

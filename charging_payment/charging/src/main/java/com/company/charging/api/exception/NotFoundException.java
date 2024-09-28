@@ -15,4 +15,6 @@ public class NotFoundException extends RuntimeException {
         super(message, cause);
     }
 
+    public NotFoundException(String roleDosentExaid) {
+    }
 }

@@ -13,10 +13,9 @@ import java.math.BigDecimal;
  */
 @Builder
 @Data
-public class DirectPaymentRequest {
+public class  DirectPaymentRequest {
     private Long userId;
     private BigDecimal amount;
-    private String publicKey;
     private PaymentType paymentType;
 
 }

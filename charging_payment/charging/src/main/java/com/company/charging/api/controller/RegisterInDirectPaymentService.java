@@ -1,5 +1,6 @@
 package com.company.charging.api.controller;
 
+import com.company.charging.api.dto.UserDTO;
 import com.company.charging.api.request.dto.PaymentUserRegisterRequest;
 import com.company.charging.api.dto.TransactionDTO;
 import com.company.charging.api.request.service.DirectPaymentService;
@@ -20,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterInDirectPaymentService {
     private final DirectPaymentService paymentService;
     @PostMapping("/api/v1/paymentUsers/create")
-    public ResponseEntity<TransactionDTO> registerUserAsPaymentUser(@RequestBody PaymentUserRegisterRequest request) {
-        if ( paymentService.registerToPaymentSystem(request)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> registerUserAsPaymentUser(@RequestBody UserDTO request) {
+        if (paymentService.registerToPaymentSystem(request)){
+            return new ResponseEntity<>("User registered",HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
