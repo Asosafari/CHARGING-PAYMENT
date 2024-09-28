@@ -6,33 +6,6 @@ JOIN users u ON t.user_id = u.id
 JOIN charging_plans cp ON t.charging_plan_id = cp.id;
 
 
-CREATE VIEW successful_transaction_view AS
-SELECT st.id AS successful_transaction_id, st.transaction_id, st.user_id, u.username, st.token_ch, st.created_date
-FROM successful_transactions st
-JOIN users u ON st.user_id = u.id;
-
-
-DELIMITER $$
-
-CREATE PROCEDURE get_authorized_bank_users(
-    IN p_user_id BIGINT,
-    OUT p_token_ch VARCHAR(255)
-)
-BEGIN
-    DECLARE v_token_ch VARCHAR(255);
-    SELECT token_ch INTO v_token_ch
-    FROM authorized_bank_users
-    WHERE user_id = p_user_id;
-
-
-    IF v_token_ch IS NOT NULL THEN
-        SET p_token_ch = v_token_ch;
-    ELSE
-        SET p_token_ch = '"UNAUTHORIZED"';
-    END IF;
-END$$
-
-DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE charging_account(

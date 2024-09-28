@@ -2,10 +2,11 @@
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(12) NOT NULL UNIQUE,
-    password VARCHAR(12) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     balance DECIMAL(19, 4) NOT NULL CHECK (balance >= 0),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_Authorize BOOLEAN NOT NULL DEFAULT FALSE,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP,
     version INT NOT NULL DEFAULT 1,
@@ -45,26 +46,6 @@ CREATE TABLE user_charging_plan (
     FOREIGN KEY (charging_plan_id) REFERENCES charging_plans(id)
 )engine=InnoDB;
 
-
-CREATE TABLE authorized_bank_users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    bank_user_id BIGINT NOT NULL UNIQUE,
-    token_ch VARCHAR(255) NOT NULL UNIQUE,
-    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-)engine=InnoDB;
-
-
-CREATE TABLE successful_transactions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    transaction_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    token_ch VARCHAR(255) NOT NULL UNIQUE,
-    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (transaction_id) REFERENCES transactions(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-)engine=InnoDB;
 
 CREATE TABLE logging_event (
   event_id BIGINT NOT NULL AUTO_INCREMENT,
