@@ -1,9 +1,9 @@
 package com.bank.payment.api.controller;
 
 import com.bank.payment.api.dto.PaymentUserRequest;
-import com.bank.payment.api.security.jwt.JWTValidatorFilter;
+import com.bank.payment.api.security.JWTValidatorFilter;
 import com.bank.payment.api.service.PaymentUserService;
-import jakarta.persistence.GeneratedValue;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,7 @@ public class PaymentUserController {
     @PostMapping("/api/v1/paymentUsers/register")
     public ResponseEntity<String> register(@RequestBody PaymentUserRequest paymentUserRequest,
                                            @RequestHeader(name = "Authorization") String token) {
+
 
         if (JWTValidatorFilter.isValid(token)) {
             if (paymentUserService.registerUserPayment(paymentUserRequest)) {
