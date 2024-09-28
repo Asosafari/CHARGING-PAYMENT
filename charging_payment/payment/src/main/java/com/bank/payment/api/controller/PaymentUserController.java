@@ -1,15 +1,13 @@
 package com.bank.payment.api.controller;
 
 import com.bank.payment.api.dto.PaymentUserRequest;
+import com.bank.payment.api.security.jwt.JWTValidatorFilter;
 import com.bank.payment.api.service.PaymentUserService;
 import jakarta.persistence.GeneratedValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Author: ASOU SAFARI
@@ -23,10 +21,13 @@ public class PaymentUserController {
 
 
     @PostMapping("/api/v1/paymentUsers/register")
-    public ResponseEntity<String> register(@RequestBody PaymentUserRequest paymentUserRequest) {
-        String publicKey = paymentUserService.registerUserPayment(paymentUserRequest);
-        if (!publicKey.equals("Register failed")) {
-            return new ResponseEntity<>(publicKey, HttpStatus.CREATED);
+    public ResponseEntity<String> register(@RequestBody PaymentUserRequest paymentUserRequest,
+                                           @RequestHeader(name = "Authorization") String token) {
+
+        if (JWTValidatorFilter.isValid(token)) {
+            if (paymentUserService.registerUserPayment(paymentUserRequest)) {
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
