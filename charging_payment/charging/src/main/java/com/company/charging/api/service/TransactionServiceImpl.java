@@ -82,36 +82,26 @@ public class TransactionServiceImpl implements TransactionService {
 
         try {
             if (orderDTO.getTransactionType().equals(TransactionType.DIRECT)) {
-
-                String publicKey = paymentRequestRepository.findEncryptedPublicKey(transactionDTO.getUserId());
-                transactionDTO.setPublicKey(publicKey);
-
-                if (publicKey.equals("UNAUTHORIZED")) {
-                    log.warn("Unauthorized direct payment  for user {}", transactionDTO.getUserId());
-                    return Optional.empty();
-                }
-
                 if (directPaymentService.processPayment(transactionDTO)) {
                     transactionDTO.setSuccess(true);
-
                     transactionDTO.setChargingPlan(orderDTO.getChargingPlan());
                 } else {
                     log.error("Direct Payment Failed for user {}", transactionDTO.getUserId());
                 }
-
-                if (orderDTO.getTransactionType().equals(TransactionType.GATEWAY)) {
+            }
+            else if (orderDTO.getTransactionType().equals(TransactionType.GATEWAY)) {
                     if (checkoutGatewayPayment(transactionDTO.getAmount()).equals("Successes")) {
                         transactionDTO.setSuccess(true);
                     } else {
                         log.error("Gateway Payment Failed for user {}", transactionDTO.getUserId());
                     }
-                }
+            }else {
+                return Optional.empty();
             }
 
             transactionDTO.setDescription("Charging successful balance : "
                     + paymentRequestRepository
                     .charging(transactionDTO.getUserId(), orderDTO.getChargingPlan().getRatePerUnit()));
-
             return Optional.of(transactionMapper
                     .mapToDto(transactionRepository
                             .save(transactionMapper
@@ -120,9 +110,7 @@ public class TransactionServiceImpl implements TransactionService {
         } catch (Exception e) {
             log.error("Failed to create transaction for order {}: {}", orderDTO, e.getMessage());
             //throw new TransactionCreationException("Failed to create transaction", e);
-            System.out.println(e.getMessage());
             return Optional.empty();
-
         }
     }
 
