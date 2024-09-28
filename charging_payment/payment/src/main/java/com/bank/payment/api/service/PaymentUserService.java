@@ -12,5 +12,5 @@ import org.springframework.context.annotation.Primary;
 
 public interface PaymentUserService {
 
-    String registerUserPayment(PaymentUserRequest paymentUserRequest);
+    boolean registerUserPayment(PaymentUserRequest paymentUserRequest);
 }
