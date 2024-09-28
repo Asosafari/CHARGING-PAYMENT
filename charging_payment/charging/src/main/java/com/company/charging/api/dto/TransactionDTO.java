@@ -28,7 +28,6 @@ public class TransactionDTO {
     private boolean isSuccess;
     private boolean isDeleted;
     private TransactionType transactionType;
-    private String publicKey;
     private String description;
     @JsonIgnore
     private User user;
