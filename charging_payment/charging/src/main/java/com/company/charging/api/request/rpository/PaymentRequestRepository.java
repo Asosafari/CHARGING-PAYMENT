@@ -17,6 +17,4 @@ public interface PaymentRequestRepository extends JpaRepository<User,Long> {
     @Procedure(procedureName = "charging_account")
     BigDecimal charging(Long userId, BigDecimal ratePerUnit);
 
-    @Procedure(procedureName = "get_authorized_bank_users")
-    String findEncryptedPublicKey(Long id);
 }

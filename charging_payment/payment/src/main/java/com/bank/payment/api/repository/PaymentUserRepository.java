@@ -14,9 +14,13 @@ import java.util.Optional;
 
 public interface PaymentUserRepository extends JpaRepository<PaymentUser,Long> {
     Optional<PaymentUser> findPaymentUserByUsername(String Username);
-    @Modifying
+
+
     @Transactional
-    @Query("UPDATE PaymentUser p SET p.accountBalance = p.accountBalance + :amount WHERE p.id = :userId")
-    int updateAccountBalance(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
+    @Modifying
+    @Query("UPDATE PaymentUser p SET p.accountBalance = p.accountBalance - :amount WHERE p.id = :paymentUserId AND p.accountBalance IS NOT NULL")
+    void updateAccountBalance(@Param("paymentUserId") Long paymentUserId, @Param("amount") BigDecimal amount);
+
+
 
 }

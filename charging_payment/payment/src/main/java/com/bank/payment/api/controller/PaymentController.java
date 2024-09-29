@@ -1,14 +1,12 @@
 package com.bank.payment.api.controller;
 
 import com.bank.payment.api.dto.PaymentRequest;
+import com.bank.payment.api.security.JWTValidatorFilter;
 import com.bank.payment.api.sterategy.PaymentStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Author: ASOU SAFARI
@@ -23,15 +21,14 @@ public class PaymentController {
     private final PaymentStrategy strategy;
 
     @PostMapping("/check")
-    public ResponseEntity<String> processPayment(@RequestBody PaymentRequest paymentRequest) {
-        boolean isPaymentSuccessful = strategy.processPayment(paymentRequest);
-
-        if (isPaymentSuccessful) {
-            return new ResponseEntity<>("Payment successful", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Payment failed", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> processPayment(@RequestBody PaymentRequest paymentRequest
+            ,@RequestHeader(name = "Authorization") String token) {
+        if (JWTValidatorFilter.isValid(token)) {
+            boolean isPaymentSuccessful = strategy.processPayment(paymentRequest);
+            if (isPaymentSuccessful) {
+                return new ResponseEntity<>("Payment successful", HttpStatus.OK);
+            }
         }
+        return new ResponseEntity<>("Payment failed", HttpStatus.BAD_REQUEST);
     }
-
-
 }

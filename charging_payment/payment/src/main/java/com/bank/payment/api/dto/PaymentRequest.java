@@ -14,8 +14,6 @@ import java.math.BigDecimal;
 public class PaymentRequest {
     private String username;
     private BigDecimal amount;
-    private String publicKey;
-    private String encryptedData;
     private PaymentType paymentType;
 
 }
