@@ -1,8 +1,6 @@
 package com.company.charging.api.controller;
 
 import com.company.charging.api.dto.UserDTO;
-import com.company.charging.api.request.dto.PaymentUserRegisterRequest;
-import com.company.charging.api.dto.TransactionDTO;
 import com.company.charging.api.request.service.DirectPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

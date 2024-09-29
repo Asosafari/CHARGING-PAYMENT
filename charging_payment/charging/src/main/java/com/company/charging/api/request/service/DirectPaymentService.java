@@ -3,10 +3,7 @@ import com.company.charging.api.dto.UserDTO;
 import com.company.charging.api.model.User;
 import com.company.charging.api.repository.UserRepository;
 import com.company.charging.api.dto.TransactionDTO;
-import com.company.charging.api.request.dto.DirectPaymentRequest;
-
 import com.company.charging.api.security.jwt.JWTUtil;
-import com.company.charging.api.service.PaymentType;
 import com.company.charging.api.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +30,6 @@ public class DirectPaymentService {
     private final RestTemplateBuilder restTemplateBuilder;
 
     public boolean processPayment(TransactionDTO transactionDTO) {
-        DirectPaymentRequest directPaymentRequest = createPaymentRequest(transactionDTO);
         RestTemplate restTemplate = restTemplateBuilder.build();
         String paymentApiUrl = "/api/v1/payments/check";
         String jwt = JWTUtil.jwtTokenGenerator();
@@ -81,15 +77,6 @@ public class DirectPaymentService {
         }
         log.info("User is ");
         return false;
-    }
-
-
-    private DirectPaymentRequest createPaymentRequest(TransactionDTO transactionDTO) {
-        return DirectPaymentRequest.builder()
-                .amount(transactionDTO.getAmount())
-                .userId(transactionDTO.getUser().getId())
-                .paymentType(PaymentType.DIRECT)
-                .build();
     }
 
 }
