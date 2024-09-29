@@ -38,15 +38,18 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request ->
                         request
+                           //     .anyRequest().permitAll()
+                                .requestMatchers("/api/v1/create").permitAll()
                                 .requestMatchers("/api/v1/users/**")
                                     .hasAnyRole(RoleType.MANAGER.name(),RoleType.ADMIN.name())
-                                .requestMatchers("/api/v1/transactions/**")
-                                    .hasAnyRole(RoleType.ADMIN.name())
+                                .requestMatchers("/api/v1/transactions")
+                                    .hasRole(RoleType.ADMIN.name())
                                 .requestMatchers("/api/v1/plans/**")
-                                    .hasAnyRole(RoleType.MANAGER.name())
-                                .requestMatchers("/api/v1/paymentUsers/create")
+                                    .hasRole(RoleType.MANAGER.name())
+                                .requestMatchers("/api/v1/paymentUsers/create","/api/v1/transactions/create")
                                     .hasRole(RoleType.USER.name())
-                                .requestMatchers("/api/v1/create").permitAll())
+                                .requestMatchers("/api/v1/transactions/{transactionId}")
+                                     .hasAnyRole(RoleType.ADMIN.name(),RoleType.USER.name()))
 
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
