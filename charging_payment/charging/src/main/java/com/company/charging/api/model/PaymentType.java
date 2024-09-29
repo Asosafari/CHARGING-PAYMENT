@@ -1,7 +1,7 @@
 package com.company.charging.api.model;
 
-public enum TransactionType {
+public enum PaymentType {
     DIRECT("DIRECT"),GATEWAY("GATEWAY");
-    TransactionType(String name) {
+    PaymentType(String name) {
     }
 }
