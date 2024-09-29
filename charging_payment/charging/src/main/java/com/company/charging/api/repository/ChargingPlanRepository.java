@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+
 @Repository
 public interface ChargingPlanRepository extends JpaRepository<ChargingPlan,Long> {
 
@@ -14,4 +16,6 @@ public interface ChargingPlanRepository extends JpaRepository<ChargingPlan,Long>
     Page<ChargingPlan> findByRatePerUnitGreaterThan(BigDecimal greaterThanRate, PageRequest pageRequest);
 
     Page<ChargingPlan> findByPricePerUnitLessThan(BigDecimal lessThanPricePerUnit, PageRequest pageRequest);
+
+    Optional<ChargingPlan> findByPlanName(String planName);
 }

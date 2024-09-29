@@ -40,8 +40,8 @@ public class TransactionController {
     }
 
     @PostMapping("/api/v1/transactions/create")
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody OrderDTO orderDTO){
-        Optional<TransactionDTO> saveTransactionDto = transactionService.createTransaction(orderDTO);
+    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO){
+        Optional<TransactionDTO> saveTransactionDto = transactionService.createTransaction(transactionDTO);
         if (saveTransactionDto.isPresent()){
 
             return new ResponseEntity<>(saveTransactionDto.get(), HttpStatus.CREATED);

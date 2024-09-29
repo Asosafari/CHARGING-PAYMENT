@@ -47,7 +47,7 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type",nullable = false)
-    private TransactionType transactionType;
+    private PaymentType paymentType;
 
     @CreationTimestamp
     @Column(nullable = false)

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Component
 public class TransactionMapper {
 
+
     public TransactionDTO mapToDto(Transaction transaction) {
         if (transaction == null) {
             return null;
@@ -16,12 +17,10 @@ public class TransactionMapper {
         return TransactionDTO.builder()
                 .id(transaction.getId())
                 .amount(transaction.getAmount())
-                .chargingPlanName(transaction.getChargingPlan().getPlanName())
-                .chargingPlanId(transaction.getChargingPlan().getId())
-                .transactionType(transaction.getTransactionType())
+                .planName(transaction.getChargingPlan().getPlanName())
+                .paymentType(transaction.getPaymentType())
                 .isDeleted(transaction.isDeleted())
                 .username(transaction.getUser().getUsername())
-                .userId(transaction.getUser().getId())
                 .isSuccess(transaction.isSuccess())
                 .build();
     }
@@ -37,7 +36,7 @@ public class TransactionMapper {
                 .createdDate(LocalDateTime.now())
                 .amount(transactionDTO.getAmount())
                 .isSuccess(transactionDTO.isSuccess())
-               .transactionType(transactionDTO.getTransactionType())
+               .paymentType(transactionDTO.getPaymentType())
                .user(transactionDTO.getUser())
                 .isDeleted(transactionDTO.isDeleted())
                 .build();

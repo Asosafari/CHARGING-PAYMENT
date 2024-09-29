@@ -1,11 +1,12 @@
 package com.company.charging.api.service;
 
-import com.company.charging.api.dto.OrderDTO;
 import com.company.charging.api.dto.TransactionDTO;
-import com.company.charging.api.exception.TransactionCreationException;
 
 import com.company.charging.api.mapper.TransactionMapper;
 import com.company.charging.api.model.*;
+import com.company.charging.api.model.PaymentType;
+import com.company.charging.api.repository.ChargingPlanRepository;
+import com.company.charging.api.repository.UserRepository;
 import com.company.charging.api.request.rpository.PaymentRequestRepository;
 import com.company.charging.api.repository.TransactionRepository;
 import com.company.charging.api.request.service.DirectPaymentService;
@@ -35,6 +36,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
     private final PaymentRequestRepository paymentRequestRepository;
     private final DirectPaymentService directPaymentService;
+    private final UserRepository userRepository;
+    private final ChargingPlanRepository chargingPlanRepository;
 
     @Override
     public Page<TransactionDTO> getAllTransaction(String username,
@@ -68,47 +71,40 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public Optional<TransactionDTO> createTransaction(OrderDTO orderDTO) {
+    public Optional<TransactionDTO> createTransaction(TransactionDTO transactionDTO) {
+        transactionDTO.setUser(userRepository.findByUsername(transactionDTO.getUsername()).get());
+        transactionDTO.setChargingPlan(chargingPlanRepository.findByPlanName(transactionDTO.getPlanName()).get());
 
-        TransactionDTO transactionDTO = TransactionDTO.builder()
-                .amount(orderDTO.getChargingPlan().getRatePerUnit().multiply(orderDTO.getChargingPlan().getPricePerUnit()))
-                .chargingPlanId(orderDTO.getChargingPlan().getId())
-                .userId(orderDTO.getUser().getId())
-                .user(orderDTO.getUser())
-                .transactionType(orderDTO.getTransactionType())
-                .isSuccess(false)
-                .isDeleted(false)
-                .build();
+        transactionDTO.setAmount(transactionDTO.getChargingPlan().
+                getRatePerUnit().multiply(transactionDTO.getChargingPlan().getPricePerUnit()));
 
         try {
-            if (orderDTO.getTransactionType().equals(TransactionType.DIRECT)) {
+            if (transactionDTO.getPaymentType().equals(PaymentType.DIRECT)) {
                 if (directPaymentService.processPayment(transactionDTO)) {
                     transactionDTO.setSuccess(true);
-                    transactionDTO.setChargingPlan(orderDTO.getChargingPlan());
                 } else {
-                    log.error("Direct Payment Failed for user {}", transactionDTO.getUserId());
+                    log.error("Direct Payment Failed for user {}", transactionDTO.getUsername());
                 }
             }
-            else if (orderDTO.getTransactionType().equals(TransactionType.GATEWAY)) {
+            else if (transactionDTO.getPaymentType().equals(PaymentType.GATEWAY)) {
                     if (checkoutGatewayPayment(transactionDTO.getAmount()).equals("Successes")) {
                         transactionDTO.setSuccess(true);
                     } else {
-                        log.error("Gateway Payment Failed for user {}", transactionDTO.getUserId());
+                        log.error("Gateway Payment Failed for user {}", transactionDTO.getUsername());
                     }
             }else {
                 return Optional.empty();
             }
 
             transactionDTO.setDescription("Charging successful balance : "
-                    + paymentRequestRepository
-                    .charging(transactionDTO.getUserId(), orderDTO.getChargingPlan().getRatePerUnit()));
+                    + paymentRequestRepository.charging(transactionDTO.getUser().getId(), transactionDTO.getChargingPlan().getRatePerUnit()));
             return Optional.of(transactionMapper
                     .mapToDto(transactionRepository
                             .save(transactionMapper
                                     .mapToModel(transactionDTO))));
 
         } catch (Exception e) {
-            log.error("Failed to create transaction for order {}: {}", orderDTO, e.getMessage());
+            log.error("Failed to create transaction for order {}: {}", transactionDTO, e.getMessage());
             //throw new TransactionCreationException("Failed to create transaction", e);
             return Optional.empty();
         }

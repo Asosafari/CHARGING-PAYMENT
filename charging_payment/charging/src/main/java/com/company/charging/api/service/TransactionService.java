@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface TransactionService {
-    Optional<TransactionDTO> createTransaction(OrderDTO orderDTO);
+    Optional<TransactionDTO> createTransaction(TransactionDTO transactionDTO);
     Page<TransactionDTO> getAllTransaction(String username,
                                            String chargingPlanName,
                                            Integer pageNumber,

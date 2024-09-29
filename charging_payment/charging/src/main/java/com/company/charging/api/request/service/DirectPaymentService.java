@@ -39,7 +39,7 @@ public class DirectPaymentService {
         String jwt = JWTUtil.jwtTokenGenerator();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwt);
-        HttpEntity<DirectPaymentRequest> entity = new HttpEntity<>(directPaymentRequest,headers);
+        HttpEntity<TransactionDTO> entity = new HttpEntity<>(transactionDTO,headers);
         ResponseEntity<String> response = restTemplate.postForEntity(paymentApiUrl, entity,String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -87,7 +87,7 @@ public class DirectPaymentService {
     private DirectPaymentRequest createPaymentRequest(TransactionDTO transactionDTO) {
         return DirectPaymentRequest.builder()
                 .amount(transactionDTO.getAmount())
-                .userId(transactionDTO.getUserId())
+                .userId(transactionDTO.getUser().getId())
                 .paymentType(PaymentType.DIRECT)
                 .build();
     }
