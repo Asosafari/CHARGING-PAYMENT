@@ -2,6 +2,7 @@ package com.company.charging.api.service;
 
 import com.company.charging.api.dto.TransactionDTO;
 
+import com.company.charging.api.exception.TransactionCreationException;
 import com.company.charging.api.mapper.TransactionMapper;
 import com.company.charging.api.model.*;
 import com.company.charging.api.model.PaymentType;
@@ -70,43 +71,47 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional
+
     public Optional<TransactionDTO> createTransaction(TransactionDTO transactionDTO) {
         transactionDTO.setUser(userRepository.findByUsername(transactionDTO.getUsername()).get());
         transactionDTO.setChargingPlan(chargingPlanRepository.findByPlanName(transactionDTO.getPlanName()).get());
-
         transactionDTO.setAmount(transactionDTO.getChargingPlan().
                 getRatePerUnit().multiply(transactionDTO.getChargingPlan().getPricePerUnit()));
+        if (transaction(transactionDTO)) {
+            transactionDTO.setDescription("Charging successful balance : "
+                    + paymentRequestRepository.charging(transactionDTO.getUser().getId(), transactionDTO.getChargingPlan().getRatePerUnit()));
 
+            return Optional.of(transactionMapper.mapToDto(transactionRepository.save(transactionMapper.mapToModel(transactionDTO))));
+        }
+        return Optional.empty();
+    }
+
+    @Transactional
+    private boolean transaction(TransactionDTO transactionDTO){
         try {
             if (transactionDTO.getPaymentType().equals(PaymentType.DIRECT)) {
                 if (directPaymentService.processPayment(transactionDTO)) {
                     transactionDTO.setSuccess(true);
+                    return true;
                 } else {
                     log.error("Direct Payment Failed for user {}", transactionDTO.getUsername());
+                    return false;
                 }
             }
             else if (transactionDTO.getPaymentType().equals(PaymentType.GATEWAY)) {
-                    if (checkoutGatewayPayment(transactionDTO.getAmount()).equals("Successes")) {
-                        transactionDTO.setSuccess(true);
-                    } else {
-                        log.error("Gateway Payment Failed for user {}", transactionDTO.getUsername());
-                    }
+                if (checkoutGatewayPayment(transactionDTO.getAmount()).equals("Successes")) {
+                    transactionDTO.setSuccess(true);
+                    return true;
+                } else {
+                    log.error("Gateway Payment Failed for user {}", transactionDTO.getUsername());
+                    return false;
+                }
             }else {
-                return Optional.empty();
+                return false;
             }
-
-            transactionDTO.setDescription("Charging successful balance : "
-                    + paymentRequestRepository.charging(transactionDTO.getUser().getId(), transactionDTO.getChargingPlan().getRatePerUnit()));
-            return Optional.of(transactionMapper
-                    .mapToDto(transactionRepository
-                            .save(transactionMapper
-                                    .mapToModel(transactionDTO))));
-
         } catch (Exception e) {
             log.error("Failed to create transaction for order {}: {}", transactionDTO, e.getMessage());
-            //throw new TransactionCreationException("Failed to create transaction", e);
-            return Optional.empty();
+            throw new TransactionCreationException("Failed to create transaction", e);
         }
     }
 
